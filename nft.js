@@ -15,7 +15,7 @@ const mintInit = async () => {
     payer, // Account that will control the minting
     mintAuthority.publicKey, // Account that will control the freezing of the token
     null,
-    9 // We are using 9 to match the CLI decimal default exactly // for nft = 0
+    0 // We are using 9 to match the CLI decimal default exactly // for nft = 0
   );
 
   console.log("1", mint.toBase58());
@@ -38,7 +38,7 @@ const mintInit = async () => {
     mint,
     tokenAccount.address,
     mintAuthority,
-    100000000000 // because decimals for the mint are set to 9  // for nft = 1
+    1 // because decimals for the mint are set to 9  // for nft = 1
   );
 
   const mintInfo2 = await getMint(connection, mint);
@@ -53,20 +53,5 @@ const mintInit = async () => {
   // await transfer(connection, payer, tokenAccount.address, new PublicKey("2vnr3zoMbWaKE5xpskTgmufH4aT5NQiikji9ngqGcxTe"), payer.publicKey, 50);
   // 100
 };
-
-const getTokensWithAccount = async () => {
-  const tokenAccounts = await connection.getTokenAccountsByOwner(payer.publicKey, {
-    programId: TOKEN_PROGRAM_ID,
-  });
-
-  console.log("Token                                         Balance");
-  console.log("------------------------------------------------------------");
-  tokenAccounts.value.forEach((tokenAccount) => {
-    const accountData = AccountLayout.decode(tokenAccount.account.data);
-    console.log(`${new PublicKey(accountData.mint)}   ${accountData.amount}`);
-  });
-};
-
-// getTokensWithAccount();
 
 mintInit();
