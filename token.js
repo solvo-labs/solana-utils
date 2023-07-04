@@ -7,7 +7,7 @@ const payer = Keypair.fromSecretKey(bs58.decode(process.env.SECRET_KEY));
 
 const mintAuthority = payer;
 
-const connection = new Connection(clusterApiUrl("testnet"), "confirmed");
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
 const mintInit = async () => {
   const mint = await createMint(
