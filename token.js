@@ -67,6 +67,6 @@ const getTokensWithAccount = async () => {
   });
 };
 
-// getTokensWithAccount();
+getTokensWithAccount();
 
-mintInit();
+// mintInit();
