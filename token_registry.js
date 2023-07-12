@@ -14,11 +14,13 @@ async function main() {
   const mint = new web3.PublicKey("NxPKnCsptzY622kVny4oQuwV8ThSxoERAhmh8vyH7mX");
 
   const seed1 = Buffer.from(anchor.utils.bytes.utf8.encode("metadata"));
+
   const seed2 = Buffer.from(mpl.PROGRAM_ID.toBytes());
 
   const seed3 = Buffer.from(mint.toBytes());
 
   const [metadataPDA, _bump] = web3.PublicKey.findProgramAddressSync([seed1, seed2, seed3], mpl.PROGRAM_ID);
+
   const accounts = {
     metadata: metadataPDA,
     mint,

@@ -43,14 +43,12 @@ const mintInit = async () => {
 
   const mintInfo2 = await getMint(connection, mint);
 
+  const toTokenAccount = await getOrCreateAssociatedTokenAccount(connection, payer, mint, new PublicKey("2vnr3zoMbWaKE5xpskTgmufH4aT5NQiikji9ngqGcxTe"));
+
   console.log("5", mintInfo2.supply);
-  // 100
+  // // 100
 
-  const tokenAccountInfo2 = await getAccount(connection, tokenAccount.address);
-
-  console.log("6", tokenAccountInfo2.amount);
-
-  // await transfer(connection, payer, tokenAccount.address, new PublicKey("2vnr3zoMbWaKE5xpskTgmufH4aT5NQiikji9ngqGcxTe"), payer.publicKey, 50);
+  await transfer(connection, payer, tokenAccount.address, toTokenAccount.address, payer.publicKey, 50000000000);
   // 100
 };
 
@@ -67,6 +65,6 @@ const getTokensWithAccount = async () => {
   });
 };
 
-getTokensWithAccount();
+// getTokensWithAccount();
 
-// mintInit();
+mintInit();
