@@ -11,6 +11,7 @@ const {
   createBurnInstruction,
   createFreezeAccountInstruction,
   createCloseAccountInstruction,
+  createMultisig,
 } = require("@solana/spl-token");
 const { clusterApiUrl, Connection, Keypair, PublicKey, sendAndConfirmTransaction, Transaction } = require("@solana/web3.js");
 const bs58 = require("bs58");
@@ -154,5 +155,20 @@ const closeAccountCommand = async () => {
   console.log(txid);
 };
 
+const createMultiSig = async () => {
+  const signer1 = Keypair.generate();
+  const signer2 = Keypair.generate();
+  const signer3 = Keypair.generate();
+
+  const multisigKey = await createMultisig(connection, payer, [signer1.publicKey, signer2.publicKey, signer3.publicKey], 2);
+
+  console.log(multisigKey);
+
+  const mint = await createMint(connection, payer, multisigKey, multisigKey, 9);
+  console.log("1", mint.toBase58());
+  const associatedTokenAccount = await getOrCreateAssociatedTokenAccount(connection, payer, mint, signer1.publicKey);
+  console.log("2", associatedTokenAccount.address.toBase58());
+};
+
 // mintInit();
-closeAccountCommand();
+createMultiSig();
