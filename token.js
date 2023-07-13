@@ -9,6 +9,7 @@ const {
   AccountLayout,
   transfer,
   createBurnInstruction,
+  createFreezeAccountInstruction,
 } = require("@solana/spl-token");
 const { clusterApiUrl, Connection, Keypair, PublicKey, sendAndConfirmTransaction, Transaction } = require("@solana/web3.js");
 const bs58 = require("bs58");
@@ -24,7 +25,7 @@ const mintInit = async () => {
     connection,
     payer, // Account that will control the minting
     mintAuthority.publicKey, // Account that will control the freezing of the token
-    null,
+    mintAuthority.publicKey,
     9 // We are using 9 to match the CLI decimal default exactly // for nft = 0
   );
 
@@ -106,5 +107,30 @@ const burncommand = async () => {
   const txid = await sendAndConfirmTransaction(connection, tx, [payer]);
   console.log(txid);
 };
+// programId: PublicKey,
+// account: PublicKey,
+// dest: PublicKey,
+// authority: PublicKey,
+// multiSigners: Array<Signer>,
+// account, mint, authority, multiSigners = [], programId = constants_js_1.TOKEN_PROGRAM_ID
 
-burncommand();
+//BfTdrxNr6SxSyMdFEsrSPjN2LdcCAVMH2CcMJUYYiMn9
+//9nbwSEkvWpPndRovnFzhPyLYPcz7DWLZDryoMfANowuu
+const freezeAccountCommand = async () => {
+  const ix = await createFreezeAccountInstruction(
+    new PublicKey("5PrM381tiagAU5AMmQg4s8Xo8mpiASn5rcdzxCKFguYQ"),
+    new PublicKey("BfTdrxNr6SxSyMdFEsrSPjN2LdcCAVMH2CcMJUYYiMn9"),
+    payer.publicKey,
+    [],
+    TOKEN_PROGRAM_ID
+  );
+
+  const tx = new Transaction();
+  tx.add(ix);
+
+  const txid = await sendAndConfirmTransaction(connection, tx, [payer]);
+  console.log(txid);
+};
+
+// mintInit();
+freezeAccountCommand();
