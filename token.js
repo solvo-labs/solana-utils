@@ -1,6 +1,16 @@
 require("dotenv").config();
-const { createMint, getOrCreateAssociatedTokenAccount, getMint, getAccount, mintTo, TOKEN_PROGRAM_ID, AccountLayout, transfer } = require("@solana/spl-token");
-const { clusterApiUrl, Connection, Keypair, PublicKey } = require("@solana/web3.js");
+const {
+  createMint,
+  getOrCreateAssociatedTokenAccount,
+  getMint,
+  getAccount,
+  mintTo,
+  TOKEN_PROGRAM_ID,
+  AccountLayout,
+  transfer,
+  createBurnInstruction,
+} = require("@solana/spl-token");
+const { clusterApiUrl, Connection, Keypair, PublicKey, sendAndConfirmTransaction, Transaction } = require("@solana/web3.js");
 const bs58 = require("bs58");
 
 const payer = Keypair.fromSecretKey(bs58.decode(process.env.SECRET_KEY));
@@ -65,6 +75,36 @@ const getTokensWithAccount = async () => {
   });
 };
 
+// programId: PublicKey,
+// mint: PublicKey,
+// account: PublicKey,
+// owner: PublicKey,
+// multiSigners: Array<Signer>,
+// amount: number | u64,
+
 // getTokensWithAccount();
 
-mintInit();
+// 2vnr3zoMbWaKE5xpskTgmufH4aT5NQiikji9ngqGcxTe
+
+// CNPUD4dE3kNueEyXLWWPkZhPHemX973GWg9ncv2uTMbq
+// 7DcKDF1YzpWbXuDDzV1StRQKEZijw2fnJWVf7ypWLKGL
+
+// account, mint, owner, amount, multiSigners = [], programId = constants_js_1.TOKEN_PROGRAM_ID
+const burncommand = async () => {
+  const ix = await createBurnInstruction(
+    new PublicKey("7DcKDF1YzpWbXuDDzV1StRQKEZijw2fnJWVf7ypWLKGL"),
+    new PublicKey("CNPUD4dE3kNueEyXLWWPkZhPHemX973GWg9ncv2uTMbq"),
+    payer.publicKey,
+    [],
+    25000000000,
+    TOKEN_PROGRAM_ID
+  );
+
+  const tx = new Transaction();
+  tx.add(ix);
+
+  const txid = await sendAndConfirmTransaction(connection, tx, [payer]);
+  console.log(txid);
+};
+
+burncommand();
