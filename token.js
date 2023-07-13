@@ -10,6 +10,7 @@ const {
   transfer,
   createBurnInstruction,
   createFreezeAccountInstruction,
+  createCloseAccountInstruction,
 } = require("@solana/spl-token");
 const { clusterApiUrl, Connection, Keypair, PublicKey, sendAndConfirmTransaction, Transaction } = require("@solana/web3.js");
 const bs58 = require("bs58");
@@ -132,5 +133,26 @@ const freezeAccountCommand = async () => {
   console.log(txid);
 };
 
+/**
+ * Construct a CloseAccount instruction
+ *
+ * @param account      Account to close
+ * @param destination  Account to receive the remaining balance of the closed account
+ * @param authority    Account close authority
+ * @param multiSigners Signing accounts if `authority` is a multisig
+ * @param programId    SPL Token program account
+ *
+ * @return Instruction to add to a transaction
+ */
+const closeAccountCommand = async () => {
+  const ix = await createCloseAccountInstruction(new PublicKey("5PrM381tiagAU5AMmQg4s8Xo8mpiASn5rcdzxCKFguYQ"), payer.publicKey, payer.publicKey, [], TOKEN_PROGRAM_ID);
+
+  const tx = new Transaction();
+  tx.add(ix);
+
+  const txid = await sendAndConfirmTransaction(connection, tx, [payer]);
+  console.log(txid);
+};
+
 // mintInit();
-freezeAccountCommand();
+closeAccountCommand();
