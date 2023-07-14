@@ -63,4 +63,14 @@ const delegateStake = async () => {
   console.log(`Stake account status: ${stakeStatus.state}`);
 };
 
-delegateStake();
+const deactivateStake = async () => {
+  const deactivateTx = StakeProgram.deactivate({
+    stakePubkey: stakeAccount,
+    authorizedPubkey: payer.publicKey,
+  });
+
+  const deactivateTxId = await sendAndConfirmTransaction(connection, deactivateTx, [payer]);
+  console.log(deactivateTxId);
+};
+
+deactivateStake();
