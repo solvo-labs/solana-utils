@@ -10,6 +10,8 @@ const payer = Keypair.fromSecretKey(bs58.decode(process.env.SECRET_KEY));
 const createStakeAccount = async () => {
   const stakeAccount = Keypair.generate();
 
+  console.log(stakeAccount.publicKey.toBase58());
+
   const amountUserWantsToStake = LAMPORTS_PER_SOL * 0.01;
   // Calculate how much we want to stake
   const minimumRent = await connection.getMinimumBalanceForRentExemption(StakeProgram.space);
@@ -39,4 +41,26 @@ const createStakeAccount = async () => {
   console.log(`Stake account status: ${stakeStatus.state}`);
 };
 
-createStakeAccount();
+const stakeAccount = new PublicKey("HmF4hDsNtpUGQ2VTf1XERU5k3n61yCBssvMq9akxh5dv");
+
+const delegateStake = async () => {
+  const validators = await connection.getVoteAccounts();
+
+  const selectedValidator = validators.current[0];
+  const selectedValidatorPubkey = new PublicKey(selectedValidator.votePubkey);
+
+  const delegateTx = StakeProgram.delegate({
+    stakePubkey: stakeAccount,
+    authorizedPubkey: payer.publicKey,
+    votePubkey: selectedValidatorPubkey,
+  });
+
+  const delegateTxId = await sendAndConfirmTransaction(connection, delegateTx, [payer]);
+  console.log(`Stake account delegated to ${selectedValidatorPubkey}. Tx Id: ${delegateTxId}`);
+
+  // Check in on our stake account. It should now be activating.
+  const stakeStatus = await connection.getStakeActivation(stakeAccount);
+  console.log(`Stake account status: ${stakeStatus.state}`);
+};
+
+delegateStake();
