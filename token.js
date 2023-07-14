@@ -171,4 +171,11 @@ const createMultiSig = async () => {
 };
 
 // mintInit();
-createMultiSig();
+// createMultiSig();
+
+const getLargestAccounts = async () => {
+  const aa = await connection.getTokenLargestAccounts(new PublicKey("7oELuogrkrM92ZkFqjADXvhXzzaS3B4QMfbBJmpFpPvY"));
+
+  console.log(aa);
+};
+getLargestAccounts();
