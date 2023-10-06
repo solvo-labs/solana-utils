@@ -18,6 +18,8 @@
     "@solana/spl-token": "^0.3.8",
     "@solana/spl-token-registry": "^0.2.4574",
     "@solana/web3.js": "^1.78.0",
+    "bignumber.js": "^9.1.2",
+    "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
     "dotenv": "^16.3.1"
   }
