@@ -97,7 +97,7 @@ const createMultisigDao = async () => {
   const mintResult = await mintCouncilTokensToMembers(testWallets, result.councilMintPk, recentBlockhash);
 
   const { daoPk, transaction: daoTransaction } = await createConfiguredDao(
-    "afcafc",
+    "nocodetooldao",
     60,
     publicKey,
     result.communityMintPk,
@@ -112,8 +112,6 @@ const createMultisigDao = async () => {
 
     return tx;
   });
-
-  console.log(txSigns);
 
   const transactionsSignatures = [];
 
@@ -231,7 +229,7 @@ const createDao = async (name, yesVoteThreshold, walletPk, communityMintPk, coun
     }),
     councilVetoVoteThreshold: new VoteThreshold({
       type: VoteThresholdType.YesVotePercentage,
-      value: 0,
+      value: yesVoteThreshold,
     }),
     communityVetoVoteThreshold: new VoteThreshold({
       type: VoteThresholdType.YesVotePercentage,
@@ -239,6 +237,8 @@ const createDao = async (name, yesVoteThreshold, walletPk, communityMintPk, coun
     }),
     councilVoteTipping: VoteTipping.Strict,
   });
+
+  console.log("here", config);
 
   const communityMintGovPk = await withCreateMintGovernance(
     instructions,
@@ -345,5 +345,3 @@ const getTimestampFromDays = (days) => {
 };
 
 createMultisigDao();
-
-// mint to ekleyeceğiz fonksiyon olarak
